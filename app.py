@@ -7,8 +7,6 @@ st.set_page_config(page_title="Rain Now", page_icon="🌧️")
 
 GEO_URL = "https://geocoding-api.open-meteo.com/v1/search"
 WX_URL = "https://api.open-meteo.com/v1/forecast"
-# Approximate (Sydapuram centre). Replace with exact coordinates later.
-MY_PLACE = ("Kammavaripalli (near Sydapuram)", 14.17714, 79.74183)
 RAIN_CODES = {51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99}
 
 T = {
@@ -34,8 +32,6 @@ T = {
         "coord_input": "Coordinates (latitude, longitude)",
         "coord_bad": "Could not read coordinates. Use the format: 14.4426, 79.9865",
         "coord_name": "Your coordinates",
-        "my_place": "Use my village: Kammavaripalli (near Sydapuram)",
-        "my_place_note": "Approximate location. Untick to search another place.",
         "codes": {0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast", 45: "Fog", 48: "Fog",
                   51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle", 61: "Light rain", 63: "Rain",
                   65: "Heavy rain", 80: "Light showers", 81: "Showers", 82: "Heavy showers",
@@ -63,8 +59,6 @@ T = {
         "coord_input": "కోఆర్డినేట్స్ (latitude, longitude)",
         "coord_bad": "కోఆర్డినేట్స్ చదవలేకపోయాను. ఇలా రాయండి: 14.4426, 79.9865",
         "coord_name": "మీ కోఆర్డినేట్స్",
-        "my_place": "నా ఊరు వాడు: Kammavaripalli (Sydapuram దగ్గర)",
-        "my_place_note": "ఇది సుమారు స్థానం. వేరే ఊరు వెతకాలంటే టిక్ తీసేయి.",
         "codes": {0: "నిర్మలమైన ఆకాశం", 1: "దాదాపు నిర్మలం", 2: "పాక్షికంగా మేఘావృతం", 3: "మేఘావృతం",
                   45: "పొగమంచు", 48: "పొగమంచు", 51: "తేలికపాటి చినుకులు", 53: "చినుకులు",
                   55: "ఎక్కువ చినుకులు", 61: "తేలికపాటి వర్షం", 63: "వర్షం", 65: "భారీ వర్షం",
@@ -131,18 +125,13 @@ t = T[lang]
 if "reports" not in st.session_state:
     st.session_state.reports = []
 
-use_mine = st.checkbox(t["my_place"], value=True)
-if use_mine:
-    st.caption(t["my_place_note"])
 query = st.text_input(t["input"])
 with st.expander(t["coord_title"]):
     st.caption(t["coord_help"])
     coord_text = st.text_input(t["coord_input"])
 
 sel = None
-if use_mine and not coord_text.strip():
-    sel = MY_PLACE
-elif coord_text.strip():
+if coord_text.strip():
     try:
         a, b = coord_text.replace("°", "").split(",")
         la, lo = float(a), float(b)
